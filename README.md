@@ -4,3 +4,5 @@
 1. Pointers
 2. OOP
 3. STL
+
+### Examples are simple tricky concepts with some explanation.
