@@ -16,6 +16,10 @@ class Derived: Base{
             use Specifiers (::) 
         */
     }
+
+    void set_base_x(int new_x){
+        Base::x = new_x;
+    }
 };
 
 int main(void){
@@ -24,4 +28,6 @@ int main(void){
     cout << d.x << "\n"; // x in the Derived class
     cout << d.get_base_x() << "\n"; // x in the Base class
 
+    d.set_base_x(40);
+    cout << "After update: " << d.get_base_x() << "\n";
 }
