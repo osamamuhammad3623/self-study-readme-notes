@@ -32,12 +32,13 @@ int main(){
 
     {
     cout << "======pointer to Base object======\n";
-    Base *b; // nothing is called
+    Base *b; // nothing is called, you just allocated a memory but didn't create an object
     }
 
     {
     cout << "======pointer to Base object with allocation======\n";
     Base *b = new Base(); // only constructor is called
+    // IMPORTANT: destructor will be called when you delete the pointer (delete b)
     }
 
 
