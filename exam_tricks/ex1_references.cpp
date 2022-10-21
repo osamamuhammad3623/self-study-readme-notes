@@ -2,7 +2,7 @@
 using namespace std;
 
 /* this function returns a reference to x */
-int & fun(){
+int & function(){
     static int x = 10;
     return x;
 }
@@ -13,7 +13,7 @@ int main(){
     because fun() returns a reference to x,
     so you can modify the value of x using a refernce to it.
     */
-    fun() = 30;
-    cout << fun();
+    function() = 30;
+    cout << function();
     return 0;
 }
