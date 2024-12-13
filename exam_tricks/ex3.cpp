@@ -13,8 +13,11 @@ public:
 
 int main() {
 	A a(5);
-	A b(a);
-	b.setNum(10);
+	/* creates 'b' using the default copy constructor, 
+	resulting in a and b sharing the same dynamically allocated memory.
+	*/
+	A b(a); 
+	b.setNum(10); // updates the shared memory to 10.
 
 	std::cout << a.getNum()<< ", " << b.getNum()<< "\n";
 

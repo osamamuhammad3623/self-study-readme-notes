@@ -5,11 +5,11 @@ class Base {
 
 protected: 
     std::string name = "Base"; 
-public: 
-    std::string getName() { return name; }
 }; 
 
 class Child : public Base { 
+    public: 
+    std::string getName() { return name; }
 protected: 
     std::string name = "Child"; 
 }; 
