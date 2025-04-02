@@ -99,6 +99,24 @@ e.g. home dir might be sda5, and its sub dirs might be in sda2 and sda6!
 - ln: create a soft/hard link to a file.
 - tar
 - gzip
+- file: get type of a file.
+
+## Linux Processes
+- the main & top-most process in linux is init (or systemd in modern systems), which is the first process started by the kernel after booting. It has PID 1, and is responsible for initializing the system, managing services, and handling system shutdown.
+- some processes ends with 'd' like systemd, the letter 'd' is for daemon, which is any process (user/kernel) or service running in background.
+
+![](images/pstree.png)
+
+- to run a command in the background, just add ' &' after typing the command, this will run it in a new job.
+
+### Related-Commands
+- ps: view a snapshot of running processes, -e to list all processes.
+- pstree: view processes tree for better visualization.
+- htop: real-time info about running processes, cpu load, mem usage, etc.
+- jobs: view background running jobs/commands.
+- fg: move backfround jobs to foreground.
+- kill: terminate a process by its PID, it sends a signal to the process, there are several termination signals, default is SIGTERM (value:15), if the process is not terminated, kill it with the most powerful signal, SIGKILL (value:9).
+- systemctl: manages the systemd system, and lets u control (list, start/stop, restart, enable/disable, and check the status) the services and units.
 
 ## General Notes
 - u can execute shell commands while in vim, the shell command output will be written to the file, :.!<command>
