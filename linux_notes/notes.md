@@ -1,14 +1,17 @@
 # Linux Notes
+credits to Eng. Ahmed Sami, owner of Big Data بالعربي YouTube channel.
 
 ## Redirection
 stdin has index 0\
 stdout has index 1\
 stderr has index 2.\
 so, to redirect stdout use > (same as 1>),\
-and to only redirect stderr, use 2>.
+and to only redirect stderr, use 2>.\
+to redirect both stdout and stderr, use &>
 
 ![](images/stream_types.png)
 
+to hide/suppress the stdout/stderr, u can redirect it to /dev/null, which acts like a black hole, any data written to it is discarded and gone.
 
 ## Users, Groups and Permissions
 there r 3 types of users:
@@ -28,7 +31,7 @@ For example, if you create a user called john, Linux would create a group called
 - /etc/passwd: contains list of users (users database).
 - /etc/group: contains list of groups along with members in each group.
 
-### Permission
+### Permissions
 permissions (r/w/x) meaning differ for file and directories:
 - for files:
     - r: allows to read the file (read file contents).
@@ -47,6 +50,7 @@ to view file modes: `ls -l`
 - useradd, userdel: add/remove users
 - passwd: change password for a user or for the root.
 - su: switch user
+- w: displays information about the users currently on the machine, and their processes.
 - usermod: modify user info, add the user to a specific group, etc.
 - groupadd, groupdel: add/remove groups
 - chown: change file/dir ownership (owner user and/or group).
@@ -89,7 +93,7 @@ e.g. home dir might be sda5, and its sub dirs might be in sda2 and sda6!
 ![](images/mounting.png)
 
 ### File Archive & Compression
-- 'tar' for tape archive, gzip/gz for gun zip.
+- 'tar' for tape archive.
 - u can archive multiple files or a dir into 1 file, with or w/o compression.
 - u can list contents of an archive file without extraction.
 - there are many compression algos, like gzip and bzip2, gzip is overall faster, but bzip2 produces smaller archives (space-time tradeoff)
@@ -98,7 +102,8 @@ e.g. home dir might be sda5, and its sub dirs might be in sda2 and sda6!
 - stat <file>: display info about the file, including inode info and the inode id.
 - ln: create a soft/hard link to a file.
 - tar
-- gzip
+- gzip: compress or uncompress FILEs
+- gunzip: uncompress FILEs
 - file: get type of a file.
 
 ## Linux Processes
@@ -108,6 +113,7 @@ e.g. home dir might be sda5, and its sub dirs might be in sda2 and sda6!
 ![](images/pstree.png)
 
 - to run a command in the background, just add ' &' after typing the command, this will run it in a new job.
+- when you ctrl+c a process to stop/kill it, what happens is that the kernel sends an interrupt signal to the running process.
 
 ### Related-Commands
 - ps: view a snapshot of running processes, -e to list all processes.
@@ -118,32 +124,49 @@ e.g. home dir might be sda5, and its sub dirs might be in sda2 and sda6!
 - kill: terminate a process by its PID, it sends a signal to the process, there are several termination signals, default is SIGTERM (value:15), if the process is not terminated, kill it with the most powerful signal, SIGKILL (value:9).
 - systemctl: manages the systemd system, and lets u control (list, start/stop, restart, enable/disable, and check the status) the services and units.
 
+## SSH (Secure SHell)
+- SSH is used to log into a remote machine, and the server-side ssh shall be installed on that machine.
+- SSH can be used as a secure tunnel to do other things, like copying files from clients to servers, port-forwarding, mounting remote filesystem locally! etc.
+- u can add alias for hosts in SSH config file, so u log in to a host without specifying its IP each time. (SSH config provides more features)
+- if u add the client's public key (found in ~/.ssh/) to the server's authorized keys (in ~/.ssh/authorized_keys), the client can then log into the machine without typing and sending the password over the network (even though it's encrypted), as the client proves it has the private key that matches the public key stored in the server (by the mechanism described in the figure).\
+by this method, u will send the encrypted password over the network only once, when u access the remote machine for the first time to add ur pub key there.
+
+>>> ![](images/authorized_keys.jpg) 
+
+### Related-Commands
+- ssh: remote login client.
+- scp: secure cp (copy).
+
 ## General Notes
 - u can execute shell commands while in vim, the shell command output will be written to the file, :.!<command>
-
 - ~/.bashrc is called/executed for both login & non-login shells.
-
 - terminals differs from each other in things like color coding, auto-completion, font size,
 but shells differs from each other in performance, built-in commands, pipelining, etc..
+- TTY: tele-typewriter, originally it's a physical terminal (keyboard & screen) connected to the machine and used to interact with the system, currently its definition also includes virtual terminals.
+- PTS: Pseudo-Terminal Slave, a virtual terminal created by the kernel to emulate a terminal.
 
-## General Commands
+## General Commands & Scripting Notes
 - wc: word count in a file, it counts lines, words and chars.
 - grep: searching in plaintext.
 - find: searching for files in a dir. 
 - head,tail: display n number of lines in a file from start/end
 - tr: text processing, as deleting character x, replacing chars, replacing a sequence of repeated char with a single occurrence of that character.
-
-## Shell Scripting notes
-> echo $var3
-
-- prints empty line, as var3 is not defined,
-> echo ${var3-undefined}
-
-- prints 'undefined' as var3 doesn't exist (it doesn't create the variable).
-
+- dpkg: packages info.
+- wget: non-interactive download of files from the web.
+- apt: provides a high-level CLI for the package management system (instead of manually: downloading the package using wget, checking its dependencies, installing it, etc..)
+- man: the system's user manual.
+- tty: print the file name of the terminal connected to stdin.
+- cut: print selected parts of lines from a file (can be used for data-extraction).
+---
+- use `declare` (instead of `set`) to declare variables with a specific type (int, RO, list, etc.)
+---
 > var1=$(date)
-
 - this is substitution, as var1 will hold the output of a command or another variable.
-> echo $?
 
+> echo $?
 - prints exit code of the last command.
+
+---
+- some features for printing variables in { } :
+
+![](images/variables.png)
