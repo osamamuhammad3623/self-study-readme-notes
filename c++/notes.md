@@ -2,6 +2,18 @@
 
 - Stylistically, struct is often used for simple data structures without methods, while class is used for more complex objects with methods and encapsulation.
 
+- `int x = 5;`\
+`int x {5};`\
+the second one is better because it is safer and doesn’t allow "narrowing conversion", so `int x = 5.1` is ok x will hold 5, but `int x{5.1}` will produce compile-error.
+
+- order: (++, - -, !) -> (*, /, %) -> (+, -) -> (=, +=, -=, …)\
+for example: `++x + y/z - t--` \
+++x is evaluated, then t--, then y/z.
+
+- `int x;`\
+`if(x=1)` -> true, assigning any number returns true\
+`if(x=0)` -> false, assigning 0 returns false.
+
 - A friend function: a function that is declared outside of a class but has the right to access the class's private and protected members.\
 it's NOT a member function, it doesn't have a `this` pointer.\
 common use cases: overloading `<<` for stream insertion.
