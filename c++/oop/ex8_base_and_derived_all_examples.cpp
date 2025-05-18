@@ -27,7 +27,7 @@ int main(){
 
     {
     cout << "======Base object======\n";
-    Base b; // constructor and destructor are called 
+    Base b; // base constructor, then destructor
     }
 
     {
@@ -36,11 +36,9 @@ int main(){
     }
 
     {
-    cout << "======pointer to Base object with allocation======\n";
-    Base *b = new Base(); // only constructor is called
-    // IMPORTANT: destructor will be called when you delete the pointer (delete b)
+    cout << "======pointer to Base object with heap allocation======\n";
+    Base *b = new Base(); // base constructor only (destructor will be called when you delete the pointer)
     }
-
 
     {
     cout << "======Derived object======\n";
@@ -53,17 +51,17 @@ int main(){
     }
 
     {
-    cout << "======pointer to Derived object with allocation======\n";
-    Derived *d = new Derived(); // only constructors are called
+    cout << "======pointer to Derived object with heap allocation======\n";
+    Derived *d = new Derived(); // base constructor, then derived constructors, no destructors
     }
 
     {
     cout << "======Polymorphism example======\n";
-    Base *b = new Derived(); // only constructors are called [because of pointers & heap allocation]
+    Base *b = new Derived(); // only constructors are called
     }
 
     {
     cout << "======Polymorphism example 2======\n";
-    Base b = Derived(); // constructor and destructor are called 
+    Base b = Derived();
     }
 }
