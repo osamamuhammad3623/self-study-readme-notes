@@ -18,6 +18,4 @@ int main(void){
     }else{
         cout << "Not done!\nResult is: " << result;
     }
-
-    //cout << result; result is NOT defined!
 }
