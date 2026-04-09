@@ -9,6 +9,12 @@
 - RBAC: Role-Based Access Control
 - ABAC: Attribute-Based Access Control
 - DHCP: Dynamic Host Configuration Protocol
+- CDN: Content Delivery Network.
+- CA: Certificate Authority.
+- TLS: Transport Layer Security
+- MAC: Message Authentication Code
+- HMAC: Hash-based MAC.
+- DNS: Domain Name System.
 ---
 ## CIA Triad
 - Confidentiality: Ensuring that sensitive information is accessed only by authorized individuals. This is often achieved through encryption, access control lists (ACLs), and two-factor authentication (2FA).
@@ -19,6 +25,12 @@
 
 - How apps remember you: servers don't usually keep a constant "open line" to your device. Instead, they use Tokens. JWT: This is the industry standard for app security. When you log in, the server gives your app a JWT. Your app then attaches this "digital badge" to every future request so the server knows it's still you.
 
+- CDN is a geographically distributed group of servers that caches content close to end users. A CDN allows for the quick transfer of assets needed for loading Internet content, including HTML pages, JavaScript files, stylesheets, images, and videos.
+
+- Hashing, Encryption and Encloding
+![](images/image.png)
+
+- Rainbow tables are large databases that contain pairs of plaintext passwords and their corresponding hash values.
 ---
 ## Threat Actor vs Threat Vector
 Threat Actor (The "Who"): is an individual or group that performs an action with the intent to harm a digital system, network, or person. They are categorized by their motivations, resources, and level of sophistication.
@@ -58,8 +70,35 @@ These are the two primary ways to manage Authorization:
     - RBAC: Permissions are tied to a job title. If you are in the "Accounting" group, you automatically get access to the payroll folders.
     - ABAC: Permissions are more granular and based on context. For example: "Allow access to the server only if the user is in the 'Engineering' group and it is between 9:00 AM and 5:00 PM."
 ---
+## HTTPS Handshake
+The Asymmetric Phase (The Handshake):
+- When you first connect to a website, the browser and server need to agree on a secret key without anyone else "listening in" seeing it.
+
+- The Certificate: The server sends its Public Key to your browser via an SSL/TLS Certificate.
+
+- Key Exchange: Using a method like Diffie-Hellman or RSA, the browser and server perform a mathematical exchange. They use the server's Public Key to securely negotiate a Session Key.
+
+- Verification: The browser uses the certificate to verify the server is who they claim to be (e.g., that you are actually talking to google.com and not an impostor).
+
+The Symmetric Phase (The Conversation):
+Once both sides have successfully derived the Session Key, they stop using the slow asymmetric keys.
+
+- Speed: They switch to a symmetric algorithm (usually AES). This is thousands of times faster and requires much less computational power.
+
+- Privacy: Every packet of data sent back and forth (your credit card info, login details, or search queries) is encrypted using that shared Session Key.
+
+- Disposability: This key is only for this specific session. If you close the browser and come back later, they will perform a new handshake and create a brand new key.
+
+One Extra Step: Integrity (Hashing): 
+To make sure a "Man-in-the-Middle" hasn't tampered with the data while it’s in transit, HTTPS also uses Hashing (specifically HMAC, which mixes the secret key with data when hashing).
+
+Each message includes a MAC. If a single bit of the encrypted data is changed by a hacker, the hash won't match when it arrives, and the browser will immediately drop the connection and show a security warning.
 
 ---
-### Resources
+## Tools
+- https://haveibeenpwned.com/
+
+---
+## Resources
 - https://youtube.com/playlist?list=PLv7cogHXoVhXvHPzIl1dWtBiYUAL8baHj&si=ciuqp3a9cqxzhkl3
 - Gemini :D
