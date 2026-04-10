@@ -15,6 +15,7 @@
 - MAC: Message Authentication Code
 - HMAC: Hash-based MAC.
 - DNS: Domain Name System.
+- DDoS: Distributed Denial of Service
 ---
 ## CIA Triad
 - Confidentiality: Ensuring that sensitive information is accessed only by authorized individuals. This is often achieved through encryption, access control lists (ACLs), and two-factor authentication (2FA).
@@ -28,7 +29,7 @@
 - CDN is a geographically distributed group of servers that caches content close to end users. A CDN allows for the quick transfer of assets needed for loading Internet content, including HTML pages, JavaScript files, stylesheets, images, and videos.
 
 - Hashing, Encryption and Encloding
-![](images/image.png)
+![](images/0.png)
 
 - Rainbow tables are large databases that contain pairs of plaintext passwords and their corresponding hash values.
 ---
@@ -93,10 +94,84 @@ One Extra Step: Integrity (Hashing):
 To make sure a "Man-in-the-Middle" hasn't tampered with the data while it’s in transit, HTTPS also uses Hashing (specifically HMAC, which mixes the secret key with data when hashing).
 
 Each message includes a MAC. If a single bit of the encrypted data is changed by a hacker, the hash won't match when it arrives, and the browser will immediately drop the connection and show a security warning.
+---
+## Attacks
+### DNS Poisoning
+Also known as DNS Spoofing, is a technique used to redirect users from legitimate websites to malicious ones.
+How it Works:
+- When you visit a website, your computer asks a DNS resolver for the IP address. To save time, resolvers "cache" (store) these addresses. In a poisoning attack, a hacker sends a fraudulent DNS response to the resolver before the real one arrives. This fake response contains a different IP address—one that leads to a server controlled by the attacker.
+
+- The Result: The DNS resolver stores the "poisoned" entry. For a period of time, anyone using that resolver who tries to visit the legitimate site will be sent to the attacker’s fake site (often a phishing page designed to steal login credentials).
+
+- The Danger: It is extremely difficult for a user to detect because the URL in the browser looks correct, but the underlying destination is compromised.
+
+### DNS Amplification Attack
+It's a type of Distributed Denial of Service (DDoS). Instead of stealing information, its goal is to crash a target’s server by overwhelming it with traffic.
+How it Works: 
+- This attack relies on two main factors: IP Spoofing and Message Size Discrepancy.
+
+- The Request: The attacker sends a large number of small DNS queries (e.g., "Tell me everything you know about this domain") to open DNS resolvers.
+
+- The Spoof: The attacker fakes the "return address" of these queries. Instead of the resolver sending the answer back to the attacker, the resolver sends it to the victim’s IP address.
+
+- The Amplification: DNS queries can be very small, but the responses can be very large. A query of 60 bytes can trigger a response of over 3,000 bytes. This "amplifies" the attacker's bandwidth by a factor of 50 or more.
+
+- The Result: The victim’s server is bombarded with massive amounts of unsolicited DNS data from hundreds of different resolvers simultaneously. This clogs their network and takes their services offline.
+![](images/1.png)
+
+### DNS Subdomain Takeover
+A subdomain takeover occurs when an attacker gains control over a legitimate subdomain (e.g., sub.example.com) because it points to an external service that has been decommissioned or deleted, but the DNS record remains active.
+
+Essentially, the DNS record becomes a "pointing finger" aimed at an empty space that an attacker can quickly occupy.
+
+How It Works: The Lifecycle of a Takeover
+- Service Provisioning: A company signs up for a third-party service (like GitHub Pages, Heroku, or an AWS S3 bucket) to host content.
+
+- DNS Configuration: The company creates a CNAME (Canonical Name) record in their DNS settings. This tells the internet: "To find blog.example.com, go look at example-company.github.io."
+
+- Service Abandonment: Later, the company stops using the third-party service and deletes their account or project. However, they forget to delete the CNAME record in their DNS.
+
+- The "Dangling" DNS: The DNS record is now "dangling." It still points to example-company.github.io, but that address is now available for anyone to claim.
+
+- The Takeover: An attacker creates a new account on that same third-party service and claims the name example-company. Now, anyone visiting blog.example.com sees the attacker's content.
+
+### TCP SYN Flood
+To understand the attack, you first have to look at how a "healthy" connection is made. Normally, the process follows three steps:
+
+- SYN (Synchronize): The client sends a request to the server.
+
+- SYN-ACK (Synchronize-Acknowledge): The server responds and reserves a bit of memory (a "slot") to keep the connection open.
+
+- ACK (Acknowledge): The client sends a final confirmation, and the connection is established.
+
+The Attack Mechanism:
+In a SYN Flood, the attacker skips the final step:
+
+- The attacker sends a massive volume of SYN requests, often using a "spoofed" (fake) IP address.
+
+- The server responds with a SYN-ACK for every single one and opens a "half-open" connection slot.
+
+- The attacker never sends the final ACK.
+
+Why it Drains Resources:
+The drain isn't necessarily about CPU or RAM in the traditional sense; it’s about the Connection Table.
+
+- Every operating system has a limit on how many "half-open" connections it can track at once.
+
+- The server will wait for a timeout period (which can be 30–120 seconds) before giving up on that connection.
+
+- By sending thousands of these requests per second, the attacker fills up the server's connection table completely.
+
+- The Result: When a legitimate user tries to connect, the server has no "slots" left and simply drops the request. The server is still "on," but it is effectively invisible to the rest of the world.
 
 ---
 ## Tools
 - https://haveibeenpwned.com/
+- virustotal.com: get sub-domains
+- dig command: get sub-domains
+- nmap: scan ports
+- https://www.exploit-db.com/
+- metasploit
 
 ---
 ## Resources
