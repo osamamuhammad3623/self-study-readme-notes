@@ -16,6 +16,7 @@
 - HMAC: Hash-based MAC.
 - DNS: Domain Name System.
 - DDoS: Distributed Denial of Service
+- XSS: Cross-Site Scripting
 ---
 ## CIA Triad
 - Confidentiality: Ensuring that sensitive information is accessed only by authorized individuals. This is often achieved through encryption, access control lists (ACLs), and two-factor authentication (2FA).
@@ -32,6 +33,10 @@
 ![](images/0.png)
 
 - Rainbow tables are large databases that contain pairs of plaintext passwords and their corresponding hash values.
+
+- GET request: data (arguments & values) are sent in the URL itself.
+- POST request: data (arguments & values) are sent in the body of the https request.
+- TRACE request: the response contains the raw request in the body.
 ---
 ## Threat Actor vs Threat Vector
 Threat Actor (The "Who"): is an individual or group that performs an action with the intent to harm a digital system, network, or person. They are categorized by their motivations, resources, and level of sophistication.
