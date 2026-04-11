@@ -164,6 +164,87 @@ The drain isn't necessarily about CPU or RAM in the traditional sense; it’s ab
 
 - The Result: When a legitimate user tries to connect, the server has no "slots" left and simply drops the request. The server is still "on," but it is effectively invisible to the rest of the world.
 
+### Session Fixation
+Session fixation is a security vulnerability where an attacker dictates/implants/provides a user's session ID before they even log in.
+
+While most session-based attacks involve stealing a cookie after a user logs in, session fixation is about implanting a cookie so the attacker already knows the "key" to the account once the victim authenticates.
+
+How It Works:
+The vulnerability exists when a web application authenticates a user but fails to assign them a new session ID, continuing to use the one established during the anonymous browsing phase.
+
+The Attack Lifecycle:
+- Preparation: The attacker navigates to the target website (e.g., bank.com) and receives a valid session ID (e.g., SID=123).
+
+- The Trap: The attacker lures the victim into using that specific session ID. This is often done via:
+
+    - URL Argument: Sending a link like "https:// bank .com/?PHPSESSID=123".
+
+    - Cross-Site Scripting (XSS): Using a script to set the cookie in the victim's browser.
+
+- The Wait: The victim clicks the link and logs into their account. Because of the bug, the application keeps SID=123 as the active session.
+
+- The Takeover: Since the attacker already has SID=123, they can now access the victim's logged-in account.
+
+Why Is This Possible?
+The root cause is a lack of Session Regeneration.
+
+In a secure environment, the transition from "Guest" to "Authenticated User" should be a hard boundary. If the server treats the session ID as a persistent identifier that survives the login process, it trusts a value that may have been externally provided.
+
+---
+## Session vs. Cookies
+While they often work together to keep you logged in, a **session** and a **cookie** are different tools that live on opposite sides of the internet connection.
+
+The simplest way to think about it is: a **cookie** is like a physical key you carry in your pocket, and a **session** is the locked room at the hotel that only that key can open.
+
+#### 1. The Cookie (The Client Side)
+A cookie is a small text file stored **locally on your computer** (the client) by your web browser. 
+
+* **Location:** Your hard drive/browser storage.
+* **Data:** Usually stores small amounts of data like site preferences, tracking IDs, or a Session ID.
+* **Lifespan:** Can be "persistent" (stays for weeks or years) or "session-based" (disappears when you close the tab).
+* **Security:** Since it lives on your machine, it can be viewed or even modified by a user if they know how.
+
+
+#### 2. The Session (The Server Side)
+A session is a temporary data storage area **on the web server**. It stores information about a specific user’s interaction with the site.
+
+* **Location:** The web server’s memory or database.
+* **Data:** Can store large, sensitive amounts of data (like your shopping cart contents, your user ID, and your permissions).
+* **Lifespan:** Usually expires quickly (e.g., after 20 minutes of inactivity) to save server resources.
+* **Security:** Much more secure because the user cannot see or change the data directly; it stays behind the server's firewall.
+
+#### How They Work Together
+The most common use case for these two is **Authentication**. Here is the typical workflow:
+
+1.  **Login:** You enter your username and password.
+2.  **Creation:** The server verifies you and creates a **Session** on its end. It gives that session a unique ID (e.g., `ABC-123`).
+3.  **Handoff:** The server sends a **Cookie** back to your browser that contains only that ID (`SessionID=ABC-123`).
+4.  **Verification:** Every time you click a new page, your browser sends that cookie back. The server looks at the ID, finds the corresponding Session in its memory, and says, "Ah, this is still the same user. Let them in."
+
+#### Which one should you use?
+* **Use Cookies for:** Non-sensitive data that needs to persist for a long time, like "Dark Mode" preferences or "Remember Me" checkboxes.
+* **Use Sessions for:** Sensitive data or temporary states, like login status, bank account details, or a multi-step checkout process.
+
+#### What Happens When you Decline Cookies
+When you click "Decline All" or block cookies in your browser settings, you aren't necessarily breaking the website, but you are essentially forcing it to have "short-term memory loss."
+
+Here is what happens behind the scenes:
+
+#### 1. You Become a "Perpetual Stranger"
+Without cookies, the website has no way to link your first click to your second click. Every time you refresh the page or click a link, the server treats you as a brand-new visitor who just arrived for the first time.
+
+#### 2. The Login Loop
+This is the most noticeable impact. If you refuse cookies, you usually **cannot stay logged in**. 
+* As we discussed, a **Session** needs a **Cookie** (the key) to identify you. 
+* If you block the cookie, the server creates a session for you but can't give you the key. 
+* You might enter your password, the server says "Success!", but the moment you try to view your profile, the server doesn't recognize you and asks you to log in again.
+
+#### 3. The "Ghost" Shopping Cart
+On many e-commerce sites, the shopping cart is tied to a cookie ID. If you add an item to your cart and then click "Checkout," a cookie-less browser might show an empty cart. The site "forgot" what you were doing the moment you navigated to a new URL.
+
+#### 4. Preference Reset
+Any settings you adjust—like switching to **Dark Mode**, choosing a language, or dismissing a "Subscribe to our Newsletter" popup—will reset. You will likely see that same cookie consent banner every single time you visit because the site can't save a cookie to remember that you already said "No."
+
 ---
 ## Tools
 - https://haveibeenpwned.com/
@@ -172,6 +253,7 @@ The drain isn't necessarily about CPU or RAM in the traditional sense; it’s ab
 - nmap: scan ports
 - https://www.exploit-db.com/
 - metasploit
+- BurpSuite
 
 ---
 ## Resources
