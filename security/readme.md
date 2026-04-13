@@ -17,6 +17,13 @@
 - DNS: Domain Name System.
 - DDoS: Distributed Denial of Service
 - XSS: Cross-Site Scripting
+- DOM: Document Object Model.
+- SOP: Same Origin Policy
+- CORS: Cross Origin Resource Sharing
+- CSP: Content Security Policy
+- WAF: Web Application Firewall.
+- HPP: HTTPS Parameter Pollution
+- CSRF: Cross-Site Request Forgery.
 ---
 ## CIA Triad
 - Confidentiality: Ensuring that sensitive information is accessed only by authorized individuals. This is often achieved through encryption, access control lists (ACLs), and two-factor authentication (2FA).
@@ -37,6 +44,10 @@
 - GET request: data (arguments & values) are sent in the URL itself.
 - POST request: data (arguments & values) are sent in the body of the https request.
 - TRACE request: the response contains the raw request in the body.
+
+- `//` sometimes is treated as `https://`, so `https://google.com` is same as `//google.com`.  
+
+- HPP: a web vulnerability where attackers inject multiple, duplicate parameters into an HTTP request, e.g. `...?search=abx&search=xyz` 
 ---
 ## Threat Actor vs Threat Vector
 Threat Actor (The "Who"): is an individual or group that performs an action with the intent to harm a digital system, network, or person. They are categorized by their motivations, resources, and level of sophistication.
@@ -251,6 +262,41 @@ On many e-commerce sites, the shopping cart is tied to a cookie ID. If you add a
 Any settings you adjust—like switching to **Dark Mode**, choosing a language, or dismissing a "Subscribe to our Newsletter" popup—will reset. You will likely see that same cookie consent banner every single time you visit because the site can't save a cookie to remember that you already said "No."
 
 ---
+
+### SOP
+It prevents a script on one website from accessing data on another website unless they share the same **origin**.
+
+* **What is an Origin?** A combination of the **Protocol** (e.g., https), **Domain** (e.g., example.com), and **Port** (e.g., 443).
+* **The Rule:** If you are logged into `yourbank.com`, SOP ensures that a malicious script running on `evil-site.com` cannot "read" your bank's cookies or intercept your account balance.
+* **Limitation:** It is very strict. Sometimes, you *want* your frontend to talk to a different API domain.
+
+### CORS
+**The Controlled Exception.**
+CORS is the "bridge" that allows a server to explicitly tell the browser: *"It's okay to let this specific outside domain access my data."*
+
+* **How it Works:** The server sends special HTTP headers (like `Access-Control-Allow-Origin`).
+* **Preflight Requests:** For "risky" actions (like a `DELETE` request), the browser sends an automated "OPTIONS" request first to ask the server for permission before sending the actual data.
+* **Key Header:** `Access-Control-Allow-Origin: https://trusted-site.com`.
+
+### CSP
+**The Extra Layer of Defense.**
+While SOP and CORS manage *where data goes*, CSP manages *what is allowed to run* on your own page. It is primarily used to prevent XSS and data injection attacks.
+
+* **The Mechanism:** You define a policy (usually via an HTTP header) that tells the browser which sources of scripts, styles, and images are trusted.
+* **The Power:** You can tell the browser: "Only run scripts that come from my own domain, and absolutely do not run any inline `<script>` tags."
+* **Example Policy:** `Content-Security-Policy: default-src 'self'; script-src https://apis.google.com`. This tells the browser to trust itself and Google APIs, but nothing else.
+
+---
+
+### Summary Comparison Table
+
+| Concept | Purpose | Primary Target |
+| :--- | :--- | :--- |
+| **SOP** | Prevents cross-origin data access by default. | Built-in Browser Security |
+| **CORS** | Allows controlled access to resources on a different domain. | API & Resource Sharing |
+| **CSP** | Restricts which resources (scripts/images) can be loaded/executed. | XSS & Injection Defense |
+
+---
 ## Tools
 - https://haveibeenpwned.com/
 - virustotal.com: get sub-domains
@@ -259,7 +305,8 @@ Any settings you adjust—like switching to **Dark Mode**, choosing a language, 
 - https://www.exploit-db.com/
 - metasploit
 - BurpSuite
-
+- [Practice] Google XSS Game
+- `<script>alert(123)</script>`
 ---
 ## Resources
 - https://youtube.com/playlist?list=PLv7cogHXoVhXvHPzIl1dWtBiYUAL8baHj&si=ciuqp3a9cqxzhkl3
