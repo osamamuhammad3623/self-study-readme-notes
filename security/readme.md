@@ -24,6 +24,10 @@
 - WAF: Web Application Firewall.
 - HPP: HTTPS Parameter Pollution
 - CSRF: Cross-Site Request Forgery.
+- LFI: Local File Inclusion
+- LFD: Local File Disclosure
+- RCE: Remote Code Execution
+- PII: Personally Identifiable Information
 ---
 ## CIA Triad
 - Confidentiality: Ensuring that sensitive information is accessed only by authorized individuals. This is often achieved through encryption, access control lists (ACLs), and two-factor authentication (2FA).
@@ -48,6 +52,21 @@
 - `//` sometimes is treated as `https://`, so `https://google.com` is same as `//google.com`.  
 
 - HPP: a web vulnerability where attackers inject multiple, duplicate parameters into an HTTP request, e.g. `...?search=abx&search=xyz` 
+
+- in LFI, if the app takes a user input as a file to be included/executed, eg `abc.com/page=news.html`
+- in LFD, same as LFI, but without file execution, only a disclosure.
+
+- Cache Poisoning
+
+- The Cache Key vs. Unkeyed Inputs:
+    - When a request hits a middleman server (like a CDN), it needs to know if it already has the answer. It creates a "key" (a unique identifier) for that request.
+
+    - Keyed Inputs: Usually include the Request Method (GET), the URL Path, and the Host header. If any of these change, the cache treats it as a different request.
+
+    - Unkeyed Inputs: Everything else in the request—such as other HTTP Headers, Cookies, and sometimes Query Parameters. The cache passes these to the backend server but doesn't include them in its "identity check."
+
+- File upload vuln: 
+![](images/2.png)
 ---
 ## Threat Actor vs Threat Vector
 Threat Actor (The "Who"): is an individual or group that performs an action with the intent to harm a digital system, network, or person. They are categorized by their motivations, resources, and level of sophistication.
@@ -307,6 +326,8 @@ While SOP and CORS manage *where data goes*, CSP manages *what is allowed to run
 - BurpSuite
 - [Practice] Google XSS Game
 - `<script>alert(123)</script>`
+- dirsearch
+- gau
 ---
 ## Resources
 - https://youtube.com/playlist?list=PLv7cogHXoVhXvHPzIl1dWtBiYUAL8baHj&si=ciuqp3a9cqxzhkl3
